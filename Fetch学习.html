@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Fetch学习.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<p>#Fetch</p>
+<h2 id="fetch-api">Fetch API</h2>
+<p><code>fetch(url, optionObj)</code></p>
+<ul>
+<li>
+<h3 id="one-%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><img class="emoji" alt="one" src="data:image/png;base64,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" /> 基本概念</h3>
+<p>fetch() 的功能与 XMLHttpRequest 基本相同，但有三个主要的差异</p>
+<ul>
+<li>fetch() 使用 Promise，不使用回调函数，因此大大简化了写法，写起来更简洁。</li>
+<li>fetch() 采用模块化设计，API 分散在多个对象上（ Response 对象、 Request 对象、 Headers 对象），更合理一些；相比之下，XMLHttpRequest 的 API 设计并不是很好，输入、输出、状态都在同一个接口管理，容易写出非常混乱的代码。</li>
+<li>fetch() 通过数据流（Stream 对象）处理数据，可以分块读取，有利于提高网站性能表现，减少内存占用，对于请求大文件或者网速慢的场景相当有用。 XMLHTTPRequest 对象不支持数据流，所有的数据必须放在缓存里，不支持分块读取，必须等待全部拿到后，再一次性吐出来。</li>
+</ul>
+</li>
+<li>
+<h3 id="two%E7%94%A8%E6%B3%95"><img class="emoji" alt="two" src="data:image/png;base64,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" />用法</h3>
+<p>在用法上， fetch() 接受一个 URL 字符串作为参数，默认向该网址发出 GET 请求，返回一个 `Promise 对象。它的基本用法如下<img class="emoji" alt="arrow_down" src="data:image/png;base64,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" /></p>
+<pre class="hljs"><code><div>  fetch(<span class="hljs-string">'https://api.github.com/users/ruanyf'</span>)
+  .then(<span class="hljs-function"><span class="hljs-params">response</span> =&gt;</span> response.json())
+  .then(<span class="hljs-function"><span class="hljs-params">json</span> =&gt;</span> <span class="hljs-built_in">console</span>.log(json))
+  .catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'Request Failed'</span>, err)); 
+</div></code></pre>
+<blockquote>
+<p>上面示例中， fetch() 接收到的 response 是一个 Stream 对象， response.json() 是一个异步操作，取出所有内容，并将其转为 JSON 对象。
+Promise 可以用 await 改写，从而有更加清晰的语义。  <img class="emoji" alt="arrow_down" src="data:image/png;base64,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" /></p>
+</blockquote>
+<pre class="hljs"><code><div>  <span class="hljs-keyword">async</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getJSON</span>(<span class="hljs-params"></span>) </span>{
+<span class="hljs-keyword">let</span> url = <span class="hljs-string">'https://api.github.com/users/ruanyf'</span>;
+<span class="hljs-keyword">try</span> {
+  <span class="hljs-keyword">let</span> response = <span class="hljs-keyword">await</span> fetch(url);
+  <span class="hljs-keyword">return</span> <span class="hljs-keyword">await</span> response.json();
+  <span class="hljs-comment">//await语句必须放在try...catch里面，这样才能捕捉异步操作中可能发生的错误。</span>
+} <span class="hljs-keyword">catch</span> (error) {
+  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'Request Failed'</span>, error);
+}
+  }
+</div></code></pre>
+</li>
+<li>
+<h3 id="three-fetch-%E9%85%8D%E7%BD%AE%E5%AF%B9%E8%B1%A1"><img class="emoji" alt="three" src="data:image/png;base64,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" /> Fetch 配置对象</h3>
+</li>
+</ul>
+<pre class="hljs"><code><div><span class="hljs-keyword">const</span> response = fetch(url, {
+  <span class="hljs-attr">method</span>: <span class="hljs-string">"GET"</span>, <span class="hljs-comment">// HTTP 请求的方法</span>
+  <span class="hljs-attr">headers</span>: {
+    <span class="hljs-string">"Content-Type"</span>: <span class="hljs-string">"text/plain;charset=UTF-8"</span>
+  }, <span class="hljs-comment">// HTTP 请求的标头</span>
+  <span class="hljs-attr">body</span>: <span class="hljs-literal">undefined</span>, <span class="hljs-comment">// POST 请求的数据体</span>
+  <span class="hljs-attr">referrer</span>: <span class="hljs-string">"about:client"</span>,
+  <span class="hljs-attr">referrerPolicy</span>: <span class="hljs-string">"no-referrer-when-downgrade"</span>,
+  <span class="hljs-attr">mode</span>: <span class="hljs-string">"cors"</span>, 
+  <span class="hljs-attr">credentials</span>: <span class="hljs-string">"same-origin"</span>,
+  <span class="hljs-attr">cache</span>: <span class="hljs-string">"default"</span>,
+  <span class="hljs-attr">redirect</span>: <span class="hljs-string">"follow"</span>,
+  <span class="hljs-attr">integrity</span>: <span class="hljs-string">""</span>,
+  <span class="hljs-attr">keepalive</span>: <span class="hljs-literal">false</span>,
+  <span class="hljs-attr">signal</span>: <span class="hljs-literal">undefined</span>
+});
+</div></code></pre>
+<ul>
+<li>
+<p>cache : 用于指定如何处理缓存。</p>
+<blockquote>
+<p>-default：默认值，先在缓存里面寻找匹配的请求。
+no-store：直接请求远程服务器，并且不更新缓存。
+reload：直接请求远程服务器，并且更新缓存。
+no-cache：将服务器资源跟本地缓存进行比较，有新的版本才使用服务器资源，否则使用缓存。
+force-cache：缓存优先，只有不存在缓存的情况下，才请求远程服务器。
+only-if-cached：只检查缓存，如果缓存里面不存在，将返回504错误。</p>
+</blockquote>
+</li>
+<li>
+<p>mode : 用于指定请求的模式</p>
+<blockquote>
+<p>cors：默认值，允许跨域请求。
+same-origin：只允许同源请求。
+no-cors：请求方法只限于 GET、POST 和 HEAD，并且只能使用有限的几个简单标头，不能添加跨域的复杂标头，相当于提交表单所能发出的请求。</p>
+</blockquote>
+</li>
+<li>
+<p>credential : 用于指定是否发送Cookie。</p>
+</li>
+<li>
+<p>keepalive : 用于页面卸载时，告诉浏览器在后台保持连接，继续发送数据。</p>
+</li>
+<li>
+<p>redirect : 用于指定 HTTP 跳转的处理方法。</p>
+<blockquote>
+<p>follow：默认值，fetch()跟随 HTTP 跳转。
+error：如果发生跳转，fetch()就报错。
+manual：fetch()不跟随 HTTP 跳转，但是response.url属性会指向新的 URL，response.redirected属性会变为true，由开发者自己决定后续如何处理跳转。</p>
+</blockquote>
+</li>
+<li>
+<p>referrer : 用于设定 fetch() 请求的 referer 标头。</p>
+<blockquote>
+<p>这个属性可以为任意字符串，也可以设为空字符串（即不发送referer标头）。</p>
+</blockquote>
+</li>
+<li>
+<p>referrerPolicy : 用于设定 referrer 标头的规则。</p>
+<blockquote>
+<p>no-referrer-when-downgrade：默认值，总是发送Referer标头，除非从 HTTPS 页面请求 HTTP 资源时不发送。
+no-referrer：不发送Referer标头。
+<strong>origin：Referer</strong>标头只包含域名，不包含完整的路径。
+<strong>origin-when-cross-origin：同源请求Referer</strong>标头包含完整的路径，跨域请求只包含域名。
+same-origin：跨域请求不发送Referer****，同源请求发送。
+strict-origin：Referer标头只包含域名，HTTPS 页面请求 HTTP 资源时不发送Referer标头。
+strict-origin-when-cross-origin：同源请求时Referer标头包含完整路径，跨域请求时只包含域名，HTTPS 页面请求 HTTP 资源时不发送该标头。
+unsafe-url：不管什么情况，总是发送Referer标头。</p>
+</blockquote>
+</li>
+<li>
+<p>signal： 指定一个 AbortSignal 实例，用于取消 fetch() 请求。</p>
+<blockquote>
+<p>fetch() 请求发送以后，如果中途想要取消，需要使用 AbortController 对象。配置对象的 signal 属性必须指定接收 AbortController 实例发送的信号 controller.signal 。 controller.abort() 方法用于发出取消信号。这时会触发 abort 事件，这个事件可以监听，也可以通过 controller.signal.aborted 属性判断取消信号是否已经发出。</p>
+</blockquote>
+<pre class="hljs"><code><div><span class="hljs-keyword">let</span> controller = <span class="hljs-keyword">new</span> AbortController();
+<span class="hljs-keyword">let</span> signal = controller.signal;
+
+fetch(url, {
+<span class="hljs-attr">signal</span>: controller.signal
+});
+
+signal.addEventListener(<span class="hljs-string">'abort'</span>,
+() =&gt; <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'abort!'</span>)
+);
+
+controller.abort(); <span class="hljs-comment">// 取消</span>
+
+<span class="hljs-built_in">console</span>.log(signal.aborted); <span class="hljs-comment">// true</span>
+</div></code></pre>
+</li>
+<li>
+<h3 id="four-response%E5%AF%B9%E8%B1%A1"><img class="emoji" alt="four" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAML0lEQVR4Xu2ba2xc1bXH//s85px5+R07TuLQOAlJSMmjeRSQeAdKeSjQVirqQwJaFCFaqR/uFV/6UPl0pfZ+LYVSStUPVT/1XhAVpZCWAgEBwSEhARLbmMSxM45fY8/rzDl77551tsajyXhmPIydxKVrspSRI+fs3/+svdba68wwKSU+z6bh823/EcDAAo35tu2WB3caurZP182dummuYRoLMaZfMhUFACk5pJB57rrDnLt9HhcvHz34uz7p26IJsOvW79137d2P/nc41rInHIsZphWCphtgmg4wAJLhkhiTAP0RHIJ7cJ38/dlUyvPX+o6/5l8cfuW3f0YNq5oEr973cFfE1J9sXrFyf7y1HXY8Cp8e8OFN04Rl6TB0Axq7NAIIKeFxD47D4bouwD14roPcbBqzUxNInj/3/xmXHzj28m8SdUfAjlse2Nrc1Pantu7VW5vb2xGKRaGHLKxZ0YKr1q7A2q5mtMXDiFgGDF3DxdZASsDjAhnHw+RsFqcTSZw4fR7D56dhx+KIxOOwo/H9k6NnN/gs3zxy8NnjCxbg6hsf6mlub3tuxep1va1d7TDsCDrbW3D7rvXYtbELIdNALu8hlXPheBw5z8PFrqYkuKYxRMMhdLVGsXPDSnx173ocPpXAS4cHMGaYMO0QdCO0FWfxnM9007FXnzlTUwDm2zV3/fCpju61va3dnQH8piu68N1btyIettA/msTIZBopxwMXEpIc5BfXGDm9NAbd95hlYFVbFHs2dWPz2jb84ZXj+PjTBFq7dcoRvTzvPeWj3Sl9qyrA7tsO3N+yovuO5s4OhOwo1vd04qHbt2Eq7eDQh2NIOy7teVJfLYKphVwyExKe75N5B+MzOQyMzmDburZgzU+/eBQDZ8ZALE4mewexAfhjxSS4e/cBM9zT9Gb3ho27Wrs60dzcgkfu2YmMw3FkcFypzRgkLk9jALhUUbmjtwMRS8cTz/chmZzGVGIMo/2nDmfPzFz77rtPuvNGAG+XeyLNbbsiTXEwM4Trtq6BxyXeGzgPPUh0DAKXr0m1hQENwZqv2dQVMLz4TgbERGypTHIPgEPzCmDo1s2R5jhM20ZLPILe7hYcGxpXGV5KLKdzA+lw1F/7xlUtActE3gGx6YnQLRUFME17h2lZQYOzsjWOmUweM1k3KHNiGR6aZrMukj5Dt88yOTUDYguFwtsrJkHDMFcbpgld0xGzTYwns6TkksIXEinAygKaNJcNRgExRMOKidiIsaIAjOm2pmvQdB1M05DOeYDEkoU+gRPkrONSJi+RIGTosE0djVrGZ2BMMREbMVYUAIxc9feux2kRS9rgkLD9Y2mM5zy4sng0FQBWRk1c0WLDojU0VCUFsZSwVRFAMnV5ibzHERYSwvelME0DBsdS6Olsws/3bYZ+QS99amQaf33vUxgaa3CLMWIJmIiNGCsKoE5WjPjhcQ4uBPgShIDOgETSgdQ0fOeGjQRfYfESXAo0ZIIRSwlbFQHknAvu+xKUPgaGTJ5jeCqHH92zDVHLqFjUhWj8+oKcyxK2igIISNI8gBbkQmCxdwCDxEcjSdxzTS/Wr2yqmh/EYmxBVryRxCZQRQBZ/FtJIeSiCkCHllOJGfSubsVXdvTU7Oro+uSNmGSKpchW9TTIASkAuvO+S+m7kIsGn5jOwZPAw/u2LKhCSMHRaAqQGiMWYlJs4FUECKCDN+CBCCp8Gq/3DKmch8HxNB77+i7EwyZqGyXARbi+QMACEJtirF4FpAoYz+WLlgMYgA+Gp3DvdRtx1Zq2EoDh8Vm0xmxEbXPJcgCxBFSqtayRA5TiyDgu4p5Qq5eNhf6Ho9PY4O/7+77cWwIwNZvDS+8O4hs3bJk/B3ABrrGGlOdSsUCx1coBxbJDIy8SIWyZdBc+M/zodAY5Afzgru0omgrLv7zdj0lfBH0eSCkbT4I0tMk6bsBCpthktS3AA5WYVN1gMp2FrrOgG5OyvnM5MaUd7t/9JB7/9nVojVolAK8dO4OTwxNoitrz1/pCEpTsM58z8p5iABRTACF51QhQidB3JiRcV2AimUFTJESD0IKKC5vMMIa+oQncf/1m7Fi3ogSAwF8/dhq6pkFwUbEKcCHI6064ZPm8FxznPU+xSFUJakSA2gSqdjIJzXfX48HY2Q4ZCIeKI/CCDvPJQRFzYngSV/a041s3bi4BSKZyeOGtk3A5h8ZYxVaXsL0FCMDmwIuj8qwPT2EvpYpEwYhJsaFGH0DKlzgD0ULtJceDaWiwTJ2ECPYum+vvZHHfT2WQ9iQe+9qesgcZz7/5McanM7BCegAnKwGq2V7Ff1dXlhCqYQrAHZfD9VQ/y4IXyniq9gFcQskoFDzIFeHcf5Z3PTi+090jWJOEINe04M6n8x4+ODuF/3ngJrTF7RKmf/R9gg8+GaNoUiVOeZVWmATSipoUfi6htgcXcH1XHasEK0jDirGJArhQPLxaGVTgpV5mRTFIbd+VohpTM/q3Tibw4G3bsffK7hKggZFJ/PPoEMKWDpX0WTF0q5zlCVQ9AlNHdCHKD2mMrl06SSrahTxC1iqDxXIhsdCZlIRUdR03fLEHB+7aUQIyODqFx379N5wcnaZJ05yKwhNY2R7Do/v3lsFPzGTx/FuDMAwtAOpsCWNLT+sFR2e2gMQsobgKwtQQABAKSApVgsAWXPw457hjdy8ufFD40dAYesNhrFsXLtGTKkBHRwyheUZf3c0R3L1+FYUWSLKk7ns2j/aIRRFQhKtliqXAVl0ABS2LrsDqqb3zZu07r90UeD22pbcLv/zx/uKE6OwEfvbsQQiIehvTUiYpajVCAhDKoREMq+NKYsmeElJZ0xkAUTd+kUeKio1Q+VBIKVe30ks0RS3kJuV1CiCLXGS1BiIC0ndWbw6QSm3bNLAUFrEM6EyFcL0CMKmYFFvNmWBhOFqWy2ry27qOwZEJhAwtqNG1TEgECfBLV66GaZQmwvHpNE4MJajXCOb55yZm1YhcoG5TObDgskYnCDE3E2D0vo4cYJoaXj86iFf7+lHbVMJsitjYckVnmQADvpBP/N8haprmTnYkkkR9CjAoFsVUfSJUnjHpJes/AmuajoWYJhik5nuFkKI7b5p6SfNVt7Gyxq7mPKAYBULFTb3GFrw2lZmr7F3yxUmeEAuYBwheVKuOJNjo4kBehl+IxoavUtLfEGPVmSAuaIaWzGoBysV6MFNkIbaqM0FVJuTciRAavV9CAbhE2NDpk15lALGwBZMxoPGhaOEkqNhQ1gleOtMYg+t6+P0Lb6sMLws/ByaS6bmn04xdtM8KqzAp7hmxpDmAaUDGyePg4Y8JtKyaWFQCG22upSyyyBqHISElK5sHLL2pWl9ui3T9Ep4yobVSATw3KH0C/34mAGLzhJuvGAGukxsTngsuPAghwLg64y5rU6M1xURsTm6isgC5zAnPde7krgdhCzB6SSxrUy2QAHdd+GzIO7njFQVwUqk3nFz6vzzXheACGtMBbZkLIBCweK4Hn81nnHmjogBDQ8fea1m19ni8pXOrFQ0HvbgmdSxnE5LD8xzkM2mkkuePE2NFAZDNplLjI89k2rr/14pEYegGmMmgXsvLZCH8PRf5dBaZ2UkQGzFWa4Sy/e8feiHc3HlvyI5frxkG7JgOTfNdza+XhzFAfcSHI5fJIp2cxmTizGvERozVvjWWIx89eeQn02Onh+kXc+k0uOeqhxSQyyPpCUFrprUH8MRCTAW+KlNhKRljk+PnhiwrHntESvYrwXkPb26BHbahmWYQDUzJfBmiI7jrwvXhszlkfPipc6fPDPcfecRnGgUwSYw1vzTFGFsNINqxZsOq1eu3/bSla+3N0aZWhCIRBJ8lNvTLq0IIley4x0EVLJ/JID0zhenE6b+fHTj6+Phw/wiAtM96FspqCmAA6AFgAsD67dff3ty59vux5o7tlh2DYVEkGL4zgGmXvM6pZ4wePMeFk0shlRx/Pzl2+umB9197CcpcAGd8Vq+2AEURLACrAhGUaV/YunenHe3YE7Kjm82Q1cV03SANgEtVKrk66XLuuXknkc+lP8qlx98ZOv52HwBRhMeIz+nU973BYiR0AYhieVoaQKJw52sJUE2IGIA2ADaWh+WgEl6qvm+O1hYiDIDcUhUE7DLqezwADoCsz5TFAu1fDebW8kZCw2AAAAAASUVORK5CYII=" /> Response对象</h3>
+<h4 id="1-response%E5%AF%B9%E8%B1%A1%E5%B1%9E%E6%80%A7">1. Response对象属性</h4>
+<ul>
+<li>Response.headers : Response 所关联的 Headers 对象。
+<blockquote>
+<p>你可以通过 Request.headers 和Response.headers 属性检索一个Headers对象, 并使用 Headers.Headers() 构造函数创建一个新的Headers 对象。Headers 对象可以使用for...of循环进行遍历。</p>
+</blockquote>
+<pre class="hljs"><code><div><span class="hljs-keyword">const</span> response = <span class="hljs-keyword">await</span> fetch(url);
+
+<span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> [key, value] <span class="hljs-keyword">of</span> response.headers) { 
+<span class="hljs-built_in">console</span>.log(<span class="hljs-string">`<span class="hljs-subst">${key}</span> : <span class="hljs-subst">${value}</span>`</span>);  
+}
+
+<span class="hljs-comment">// 或者</span>
+<span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> [key, value] <span class="hljs-keyword">of</span> response.headers.entries()) { 
+<span class="hljs-built_in">console</span>.log(<span class="hljs-string">`<span class="hljs-subst">${key}</span> : <span class="hljs-subst">${value}</span>`</span>);  
+}
+</div></code></pre>
+</li>
+<li>Headers.append() : 给现有的header添加一个值, 或者添加一个未存在的header并赋值.</li>
+<li>Headers.delete() : 从Headers对象中删除指定header。</li>
+<li>Headers.entries()\Headers.keys()\Headers.values() : 以 迭代器 的形式返回Headers对象中所有的键值对 \ header 名 \ header 值。</li>
+<li>Headers.get : 以 ByteString 的形式从Headers对象中返回指定header的全部值。</li>
+<li>Headers.has : 以布尔值的形式从Headers对象中返回是否存在指定的header。</li>
+<li>Headers.set : 替换现有的header的值, 或者添加一个未存在的header并赋值。Headers.set() 将会用新的值覆盖已存在的值, 但是 Headers.append() 会将新的值添加到已存在的值的队列末尾。<pre class="hljs"><code><div>    <span class="hljs-keyword">let</span> myHeaders = <span class="hljs-keyword">new</span> Headers();
+    myHeaders.append(<span class="hljs-string">'Content-Type'</span>, <span class="hljs-string">'text/xml'</span>);
+    myHeaders.get(<span class="hljs-string">'Content-Type'</span>);
+    <span class="hljs-comment">// should return 'text/xml'</span>
+</div></code></pre>
+</li>
+<li>Response.ok : 包含了一个布尔值，标示该 Response 成功（HTTP 状态码的范围在 200-299），网址跳转（3XX）的状态码会被自动转成200。</li>
+<li>Response.status : 包含 Response 的状态码 （例如 200 表示成功）。</li>
+<li>Response.statusText : 包含了与该 Response 状态码一致的状态信息（例如，OK对应 200）。</li>
+<li>Response.redirected : 表示该 Response 是否来自一个重定向，如果是的话，它的 URL 列表将会有多个条</li>
+<li>Response.url : 包含 Response 的URL。</li>
+<li>Response.type : 包含 Response 的类型（例如，basic、cors）。
+<blockquote>
+<p>basic：普通请求，即同源请求。
+cors：跨域请求。
+error：网络错误，主要用于 Service Worker。&gt; opaque：如果fetch()请求的type属性设为no-cors，就会返回这个值，详见请求部分。表示发出的是简单的跨域请求，类似表单的那种跨域请求。
+opaqueredirect：如果fetch()请求的redirect属性设为manual，就会返回这个值，详见请求部分。</p>
+</blockquote>
+</li>
+<li>Response.body : 一个简单的 getter，用于暴露一个 ReadableStream 类型的 body 内容。</li>
+<li>Response.bodyUsed : 包含了一个布尔值来标示该 Response 是否读取过 Body。
+<blockquote>
+<p>注意： fetch() 发出请求后，只有网络错误或者无法链接时，才会报错。其他情况都不会报错，而是认为请求成功。 也就是说，即使服务器返回的状态码是 4xx 或 5xx， fetch() 也不会报错（即 Promise 不会变为 rejected 状态）。只有通过 Response.status 属性，得到 HTTP 回应的真实状态码，才能判断请求是否成功</p>
+</blockquote>
+<pre class="hljs"><code><div><span class="hljs-keyword">async</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">fetchText</span>(<span class="hljs-params"></span>) </span>{
+<span class="hljs-keyword">let</span> response = <span class="hljs-keyword">await</span> fetch(<span class="hljs-string">'/readme.txt'</span>);
+<span class="hljs-keyword">if</span> (response.status &gt;= <span class="hljs-number">200</span> &amp;&amp; response.status &lt; <span class="hljs-number">300</span>) {
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">await</span> response.text();
+} <span class="hljs-keyword">else</span> {
+    <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(response.statusText);
+}
+}<span class="hljs-string">``</span><span class="hljs-string">`
+
+</span></div></code></pre>
+</li>
+</ul>
+<h4 id="2-%E5%AF%B9%E8%B1%A1%E7%9A%84%E6%96%B9%E6%B3%95">2. 对象的方法</h4>
+<ul>
+<li>数据读取方法
+<ul>
+<li>异步方法
+<ul>
+<li>response.text()：得到文本字符串。</li>
+<li>response.json()：得到 JSON 对象。</li>
+<li>response.blob()：得到二进制 Blob 对象。<pre class="hljs"><code><div>    <span class="hljs-keyword">const</span> response = <span class="hljs-keyword">await</span> fetch(<span class="hljs-string">'flower.jpg'</span>);
+    <span class="hljs-keyword">const</span> myBlob = <span class="hljs-keyword">await</span> response.blob();
+    <span class="hljs-keyword">const</span> objectURL = URL.createObjectURL(myBlob);
+    <span class="hljs-keyword">const</span> myImage = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">'img'</span>);
+    myImage.src = objectURL
+</div></code></pre>
+<ul>
+<li>response.formData()：得到 FormData 表单对象。</li>
+<li>response.arrayBuffer()：得到二进制 ArrayBuffer 对象，主要用于获取流媒体文件。<pre class="hljs"><code><div><span class="hljs-keyword">const</span> audioCtx = <span class="hljs-keyword">new</span> <span class="hljs-built_in">window</span>.AudioContext();
+<span class="hljs-keyword">const</span> source = audioCtx.createBufferSource();
+<span class="hljs-keyword">const</span> response = <span class="hljs-keyword">await</span> fetch(<span class="hljs-string">'song.ogg'</span>);
+<span class="hljs-keyword">const</span> buffer = <span class="hljs-keyword">await</span> response.arrayBuffer();
+<span class="hljs-keyword">const</span> decodeData = <span class="hljs-keyword">await</span> audioCtx.decodeAudioData(buffer);
+source.buffer = buffer;
+source.connect(audioCtx.destination);
+source.loop = <span class="hljs-literal">true</span>;
+</div></code></pre>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>其他方法
+<ul>
+<li>Response.clone() : 创建一个 Response 对象的克隆。</li>
+<li>Response.error() : 返回一个绑定了网络错误的新的 Response 对象。</li>
+<li>Response.redirect : 用另一个 URL 创建一个新的 Response。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+</body>
+</html>
