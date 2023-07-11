@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Ajax&Axios&Fetch.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<p>#Ajax &amp; Axios &amp; Fetch</p>
+<h2 id="1-ajax">1. Ajax</h2>
+<ul>
+<li>AJAX 全称(Async Javascript and XML) 即异步的 JavaScript 和 XML ，它是一种使用 JavaScript 在无需重新加载整个页面的情况下，与服务器交换数据并更新部分网页的技术。通过 <code>XMLHttpRequest</code> 对象来实现，可以用于发送 GET 和 POST 请求。Ajax 不直接返回 Promise，需要使用回调函数来处理结果。然后⽤ JavaScript 来操作 DOM ⽽更新⻚⾯</li>
+</ul>
+<h3 id="%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8xmlhttprequest"><em>如何使用XMLHttprequest：</em></h3>
+<blockquote>
+<p>1.需要对核心对象进行实例化 var 变量 =new XMLHttprequest()
+2.建立连接 ： 变量.open(请求方式，请求路径，同步/异步)
+3.发送请求 ： 变量.send(请求的参数)
+4.变量.onreadystatechange=function(){}</p>
+</blockquote>
+<h2 id="2-fetch">2. Fetch</h2>
+<p>是AJAX的替代品，使用了ES6中的promise对象。Fetch是基于promise设计的，因此它直接返回 Promise 对象。但是，一定记住<code>fetch不是ajax的进一步封装</code>，而是<code>原生JavaScript API</code>，没有使用XMLHttpRequest对象。Fetch 对于错误的处理方式与 Ajax 和 Axios 不同。即使 HTTP 响应返回的状态是 404 或 500，只要请求已经完成，Fetch Promise 就会解析为 &quot;ok&quot;，而不是 &quot;reject&quot;。 fetch的优势主要优势就是：</p>
+<ul>
+<li>语法简洁，更加语义化。</li>
+<li>同构方便</li>
+<li>更加底层，提供的API丰富（request, response）</li>
+<li>脱离了XHR，是ES规范里新的实现方式</li>
+</ul>
+<blockquote>
+<p>请注意，fetch 规范与 ajax主要有三种方式的不同：
+1）fetch只对网络请求报错，对400，500都当做成功的请求，服务器返回 400，500 错误码时并不会 reject，只有网络错误这些导致请求不能完成时，fetch 才会被 reject。
+2）fetch默认不会带cookie，需要添加配置项： fetch(url, {credentials: ‘include’})。
+3）fetch不支持abort，不支持超时控制，使用setTimeout及Promise.reject的实现的超时控制并不能阻止请求过程继续在后台运行，造成了流量的浪费。
+4）fetch没有办法原生监测请求的进度，而XHR可以。</p>
+</blockquote>
+<h2 id="3-axios">3. Axios</h2>
+<p>axios 是一个基于 Promise 的 http请求库，可以用在浏览器和 node.js 中使用，Axios 提供了许多实用的功能，例如拦截请求和响应、取消请求、转换 JSON 数据、客户端防御 XSRF 等。它还提供了用于处理 Promise 的方法，使你能够更容易地配置和处理 HTTP 请求。另外，Axios 的错误处理方式比 Fetch 更直观，如果 HTTP 响应的状态码表示错误（如 404 或 500），Axios Promise 会被 reject。本质上是对原生<code>XMLHttpRequest</code>的封装，只不过它是Promise 的实现版本，符合最新的ES规则。</p>
+<blockquote>
+<p>axios有如下特性：
+1.从浏览器中创建 XMLHttpRequests
+2.从 node.js 创建 http 请求
+3.支持 Promise API
+4.拦截请求和响应
+5.转换请求数据和响应数据
+6.取消请求
+7.自动转换 JSON 数据
+8.客户端支持防御 XSRF</p>
+</blockquote>
+<h2 id="%E6%80%BB%E7%BB%93">总结</h2>
+<p>三者都是用于网络请求的，但是不同纬度。</p>
+<ul>
+<li>
+<p>Ajax：一种技术统称，并不是一个API。</p>
+</li>
+<li>
+<p>Fetch：一个浏览器的原生API，和 XMLHttpRequest 是一个级别，但是语法更加简洁、易用，支持 Promise。</p>
+</li>
+<li>
+<p>Axios：一个最常用的第三方网络请求库。</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">网络请求</th>
+<th style="text-align:center">特点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">Ajax</td>
+<td style="text-align:center">一种技术统称，主要利用XHR实现网络请求</td>
+</tr>
+<tr>
+<td style="text-align:center">Fetch</td>
+<td style="text-align:center">具体API，基于promise，实现网络请求</td>
+</tr>
+<tr>
+<td style="text-align:center">Axios</td>
+<td style="text-align:center">一个封装库，基于XHR封装，较为推荐使用</td>
+</tr>
+</tbody>
+</table>
+
+</body>
+</html>
