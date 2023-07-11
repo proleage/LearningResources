@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.bootcdn.net/ajax/libs/axios/0.21.1/axios.js"></script>
+</head>
+
+<body>
+    <div class- "container">
+        <h2 class="page-header">默认配置</h2>
+        <button class="btn btn-primary">发送GET请求</button>
+        <button class="btn btn-warning">发送POST请求</button>
+        <button class="btn btn-success">发送PUT请求</button>
+        <button class="btn btn-danger">发送DELETE请求</button>
+    </div>
+    <script>
+        //获取按钮
+        const btns = document.querySelectorAll('button')
+
+        //创建实例对象，配置在每个实例对象内部生效，不像axios.default.<xxx>对所有axios对象生效
+        const randomPwd = axios.create({
+            baseURL: 'https://v.api.aa1.cn/api/api-mima/mima.php',
+            params: {
+                msg: 10
+            }
+        })
+
+        randomPwd({}).then(response => {
+            console.log(response)
+        })
+
+        //实时汇率换算
+        const antherInstance = axios.create({
+            baseURL: 'http://op.juhe.cn',
+        })
+        antherInstance({
+            url: '/onebox/exchange/currency',
+            params: {
+                from: 'CNY',
+                to: 'JPY',
+                version: 2,
+                key: '3d0ab2052881692482e2fe4bd1074153',
+            }
+        }).then(res => {
+            console.log("CNY 1 = ", " JPY", res.data.result[0].result)
+            console.log("JPY 1 = ", " CNY", res.data.result[1].result)
+        })
+    </script>
+</body>
+
+</html>

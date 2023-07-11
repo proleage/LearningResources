@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.bootcdn.net/ajax/libs/axios/0.21.1/axios.js"></script>
+</head>
+
+<body>
+    <div class- "container">
+        <h2 class="page-header">其他请求方法</h2>
+        <button class="btn btn-primary">发送GET请求</button>
+        <button class="btn btn-warning">发送POST请求</button>
+        <button class="btn btn-success">发送PUT请求</button>
+        <button class="btn btn-danger">发送DELETE请求</button>
+    </div>
+    <script>
+        //获取按钮
+        const btns = document.querySelectorAll('button')
+
+        //发送GET请求
+        btns[0].onclick = function() {
+                axios.request({
+                    method: 'GET',
+                    url: 'http://localhost:3000/comments'
+                }).then(response => {
+                    console.log(response)
+                })
+            }
+            //发送GET请求
+        btns[1].onclick = function() {
+            axios.post(
+                'http://localhost:3000/comments', {
+                    "body": "request Post Comments",
+                    "postId": 2
+                }
+            ).then(res => {
+                console.log(res)
+            })
+        }
+    </script>
+</body>
+
+</html>

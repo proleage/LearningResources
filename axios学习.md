@@ -104,55 +104,30 @@ axios({
             <button class="btn btn-success">发送PUT请求</button>
             <button class="btn btn-danger">发送DELETE请求</button>
         </div>
-    <script>
-        //获取按钮
+     <script>
+         //获取按钮
         const btns = document.querySelectorAll('button')
 
+        //发送GET请求
         btns[0].onclick = function() {
-                //发送ajax请求
-                axios({
+                axios.request({
                     method: 'GET',
-                    url: 'http://localhost:3000/posts/2'
-                }).then(response => {
-                    console.log(response);
-                })
-            }
-            //添加数据
-        btns[1].onclick = function() {
-                axios({
-                    method: 'POST',
-                    url: 'http://localhost:3000/posts',
-                    data: {
-                        title: "今天天气真不错",
-                        author: "proleage"
-                    }
+                    url: 'http://localhost:3000/comments'
                 }).then(response => {
                     console.log(response)
                 })
             }
-              //更新数据
-          btns[2].onclick = function() {
-              axios({
-                  method: 'PUT',
-                  url: 'http://localhost:3000/posts/3',
-                  data: {
-                      title: "PUT更改后的数据",
-                      author: "hotfix"
-                  }
-              }).then(response => {
-                  console.log(response)
-              })
-          }
-
-          btns[3].onclick = function() {
-              axios({
-                  method: 'DELETE',
-                  url: 'http://localhost:3000/posts/4',
-
-              }).then(response => {
-                  console.log(response)
-              })
-          }
+            //发送GET请求
+        btns[1].onclick = function() {
+            axios.post(
+                'http://localhost:3000/comments', {
+                    "body": "request Post Comments",
+                    "postId": 2
+                }
+            ).then(res => {
+                console.log(res)
+            })
+        }
       </script>
     </body>
   </html>
@@ -194,7 +169,7 @@ const instance = axios.create({
 - axios#put(url[, data[, config]])
 - axios#patch(url[, data[, config]])
 
-### *7. 请求配置*
+### *7. 请求配置 Request Config*
 这些是创建请求时可以用的配置选项。只有 `url`是必需的。如果没有`指定 method`，请求将默认使用 `get 方法`
 
 ```js
