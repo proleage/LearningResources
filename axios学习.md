@@ -572,3 +572,4 @@ const data = {
 console.log(qs.stringify(data, {arrayFormat: 'brackets'})); // 输出: 'colors[]=red&colors[]=blue&colors[]=green'
 
 ```
+
