@@ -403,7 +403,6 @@ Resourses:
         ```
         ----------------------------------
         在这段代码中，遇到了由于浏览器同源策略导致的问题,报错如
-        ![](https://github.com/proleage/LearningResources/raw/main/err_CORS.png?raw=true)
         ![](err_CORS.png)
         **`同源策略`**
         > 它规定了一个网页的脚本在没有服务器的明确同意下，不能获取访问其它域名下的资源。如果你在尝试从一个源（origin）（比如 'http://127.0.0.1:5500'）访问另一个源（例如 'http://op.juhe.cn/onebox/exchange/currency'）的资源，浏览器会阻止这种行为，这就是你现在遇到的跨源资源共享（CORS）问题。
