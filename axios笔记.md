@@ -633,40 +633,110 @@ Resourses:
 
     ```
 - 指定响应拦截器的数据
-  - 源代码如下
+  - 源代码如下 :arrow_down:
     ```JS
         axios.interceptors.response.use(function(response) {
-        // Any status code that lie within the range of 2xx cause this function to trigger
-        // Do something with response data
         console.log("res interceptors 成功-3")
         return response;
     }, function(error) {
-        // Any status codes that falls outside the range of 2xx cause this function to trigger
-        // Do something with response error
         console.log("res interceptors err-3")
         return Promise.reject(error);
     });
     ```
-    输出response对象
-  - 指定后如下 
+    输出:arrow_right: response对象
+  - 指定后如下 :arrow_down:
     ```js
-        //设置响应拦截器-3 修改response,自定义要取得response数据
+
     axios.interceptors.response.use(function(response) {
-        // Any status code that lie within the range of 2xx cause this function to trigger
-        // Do something with response data
         console.log("res interceptors 成功-3")
         return response.data[0];
     }, function(error) {
-        // Any status codes that falls outside the range of 2xx cause this function to trigger
-        // Do something with response error
         console.log("res interceptors err-3")
         return Promise.reject(error);
     });
     ```
-    输出：return response.data[0];
+    输出:arrow_right:return response.data[0];
+    
+    --------------------------------------
+## 1.4 取消请求
+
+>在v0.22.0后 Axios支持了 AbortController()代替CancelToken()完成取消请求，在过渡阶段两种都可以使用，但是官方更推荐AbortController(),故此处以AbortController()为例
+- 默认的使用方式 (注意此处将之前引入的`axios v0.21.1`更改为 `axios v0.22.0`)
+    ```html
+    <!DOCTYPE html>
+    <html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>
+            Document
+        </title>
+        //注意此处，更改引入的axios版本
+        <script src="https://cdn.bootcdn.net/ajax/libs/axios/0.22.0/axios.js">
+        </script>
+    </head>
+
+    <body>
+        <div class="container">
+            <h2 class="page-header">
+                请求取消
+            </h2>
+            <button class="btn btn-primary">
+                取消请求
+            </button>
+        </div>
+    </body>
+    <script>
+    const btns = document.querySelectorAll('button');
+    const controller = new AbortController();
+    btns[0].onclick = function() {
+        axios({
+            signal: controller.signal,
+            method: 'GET',
+            url: 'http://localhost:3000/posts'
+        }).then(response => {
+            console.log(response)
+        }).catch(e => {
+            console.log(e, "req cancelled")
+        })
+        };
+        btns[1].onclick = function() {
+            controller.abort()
+        }
+    </script>
+    </html>
+    ```
+    >此时如过直接执行会发现点击发送请求会立刻被服务器响应，没有办法取消本次请求，点击取消按钮后会阻止之后的每一次请求，这并不是我们真正想要的效果。
+    ![](cancel-ori.png)
+    所以可以通以下的配置更改，使得既可以给我们取消本次请求的机会，又不会阻止之后的每一次请求。
+    - 1. 在json-server中设置延迟响应 ，解决没有取消本次请求机会的问题。
+    - 2. 由查询API可知，AbortController方法只读不可写入，所以采用赋值为null完成复位。解决了阻止之后每一次请求的问题
+    ```js
+        const btns = document.querySelectorAll('button');
+        let controller = new AbortController();
+        btns[0].onclick = function() {
+            if (controller) {
+                controller = null
+            }
+            controller = new AbortController()
+            axios({
+                signal: controller.signal,
+                method: 'GET',
+                url: 'http://localhost:3000/posts'
+            }).then(response => {
+                console.log(response)
+            }).catch(e => {
+                console.log(e, "req cancelled")
+            })
+        };
+        btns[1].onclick = function() {
+            controller.abort()
+        }
+    ```
+    ![](cancell2.png)
 
 
 # 2 Axios源码分析
-# 3 仿写Axios
-
+  在指定目录下通过`npm install axios@yourVersion`获取axios的源码。这部分之后再更新
 
