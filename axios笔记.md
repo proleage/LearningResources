@@ -486,8 +486,186 @@ Resourses:
                 `json-server --watch db.json`
         ----------------------------------------------------
 ## 1.3 拦截器 Interceptors
-     
-  
+
+  - 拦截器：可以在被`then`或者`catch`处理之前拦截请求或响应，并进行处理
+  - 拦截器的基础用法
+    ```html
+    <script>
+    // 设置一个请求拦截器
+    axios.interceptors.request.use(function(config) {
+        // Do something before request is sent
+
+        console.log("req interceptors 成功-1")
+        return config
+    }, function(error) {
+        // Do something with request error
+        console.log("req interceptors err-1")
+        return Promise.reject(error);
+    });
+
+    //设置响应拦截器 
+    axios.interceptors.response.use(function(response) {
+        // Any status code that lie within the range of 2xx cause this function to trigger
+        // Do something with response data
+        console.log("res interceptors 成功-1")
+        return response;
+    }, function(error) {
+        // Any status codes that falls outside the range of 2xx cause this function to trigger
+        // Do something with response error
+        console.log("res interceptors err-1")
+        return Promise.reject(error);
+
+    //发送请求 
+    axios({
+        method: 'GET',
+        url: 'http://localhost:3000/posts'
+        }).then(response => {
+            console.log(response)
+        }).catch(e => {
+            console.log(e)
+        })
+    </script>
+        });
+    ```
+> 值得注意的是,当具有多个拦截器是的执行顺序
+> 请求拦截器是顺序，响应拦截器是逆序
+```html
+<script>
+    // 设置一个请求拦截器 -1 
+    axios.interceptors.request.use(function(config) {
+        console.log("req interceptors 成功-1")
+        return config
+    }, function(error) {
+        // Do something with request error
+        console.log("req interceptors err-1")
+        return Promise.reject(error);
+    });
+
+    // 设置一个请求拦截器-2 throw err
+    axios.interceptors.request.use(function(config) {
+        // Do something before request is sent
+
+        console.log("req interceptors 成功-2")
+        throw '2 req err'
+        //return config
+    }, function(error) {
+        // Do something with request error
+        console.log("req interceptors err-2")
+        return Promise.reject(error);
+    });
+
+
+    // 设置一个请求拦截器-3 
+    axios.interceptors.request.use(function(config) {
+        // Do something before request is sent
+        console.log("req interceptors 成功-3")
+        return config
+    }, function(error) {
+        // Do something with request error
+        console.log("req interceptors err-3")
+        return Promise.reject(error);
+    });
+
+    //设置响应拦截器 -1
+    axios.interceptors.response.use(function(response) {
+        console.log("res interceptors 成功-1")
+        return response;
+    }, function(error) {
+        console.log("res interceptors err-1")
+        return Promise.reject(error);
+    });
+
+    //设置响应拦截器-2
+    axios.interceptors.response.use(function(response) {
+        console.log("res interceptors 成功-2")
+        return response;
+    }, function(error) {
+
+        console.log("res interceptors err-2")
+        return Promise.reject(error);
+    });
+
+
+    //设置响应拦截器-3 修改response,自定义要取得response数据
+    axios.interceptors.response.use(function(response) {
+        console.log("res interceptors 成功-3")
+        return response;
+    }, function(error) {
+
+        console.log("res interceptors err-3")
+        return Promise.reject(error);
+    });
+
+
+
+    //发送请求
+    axios({
+        method: 'GET',
+        url: 'http://localhost:3000/posts'
+    }).then(response => {
+        console.log(response)
+    }).catch(e => {
+        console.log(e)
+    })
+</script>
+```
+>执行结果如下 -3-2-1--1-2-3-
+此外在抛出错误的话是在 请求interceptor2中抛出，会被其更后面的 请求interceptor1 catch，并最终被axios请求的`.catch(e => {
+        console.log(e)
+    })`输出
+![](interceptor-2-1-1-2.png)
+
+- 还可以在请求拦截器中修改config参数，如下
+    ```js
+    axios.interceptors.request.use(function(config) {
+        //修改params和timeout
+        config.params = {
+            a: 100
+        }
+        config.timeout = 3000
+        console.log("req interceptors 成功-3")
+        return config
+    }, function(error) {
+        // Do something with request error
+        console.log("req interceptors err-3")
+        return Promise.reject(error);
+    });
+
+    ```
+- 指定响应拦截器的数据
+  - 源代码如下
+    ```JS
+        axios.interceptors.response.use(function(response) {
+        // Any status code that lie within the range of 2xx cause this function to trigger
+        // Do something with response data
+        console.log("res interceptors 成功-3")
+        return response;
+    }, function(error) {
+        // Any status codes that falls outside the range of 2xx cause this function to trigger
+        // Do something with response error
+        console.log("res interceptors err-3")
+        return Promise.reject(error);
+    });
+    ```
+    输出response对象
+  -指定后如下 
+    ```js
+        //设置响应拦截器-3 修改response,自定义要取得response数据
+    axios.interceptors.response.use(function(response) {
+        // Any status code that lie within the range of 2xx cause this function to trigger
+        // Do something with response data
+        console.log("res interceptors 成功-3")
+        return response.data[0];
+    }, function(error) {
+        // Any status codes that falls outside the range of 2xx cause this function to trigger
+        // Do something with response error
+        console.log("res interceptors err-3")
+        return Promise.reject(error);
+    });
+    ```
+    输出：return response.data[0];
+
+
 # 2 Axios源码分析
 # 3 仿写Axios
 
