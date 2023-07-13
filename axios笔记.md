@@ -648,7 +648,7 @@ Resourses:
     });
     ```
     输出response对象
-  -指定后如下 
+  - 指定后如下 
     ```js
         //设置响应拦截器-3 修改response,自定义要取得response数据
     axios.interceptors.response.use(function(response) {
