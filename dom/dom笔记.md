@@ -42,4 +42,32 @@ alert(paragraphs[0].nodeName);
 
     > - 许多对象实现了几个不同的接口。例如，table 对象，一方面实现了一个专门的 `HTMLTableElement` 接口，其中包括诸如 **createCaption** 和 **insertRow** 等方法。另一方面它也是一个 **HTML** 元素，所以 table 实现了 `DOM Element` 。
     > - 就 DOM 而言，HTML 元素也是构成 HTML 或 XML 页面对象模型的节点树中的一个节点，所以表格对象也实现了更基本的 Node 接口，Element 就是从这个接口衍生出来的。
+- 核心接口  https://developer.mozilla.org/zh-CN/docs/Web/API/Document/querySelectorAll
+    - document.querySelector()
 
+        - >文档对象模型Document引用的 querySelector() 方法返回文档中与指定选择器或选择器组匹配的第一个 Element对象。如果找不到匹配项，则返回`null`。
+        - ```js
+            element = document.querySelector(selectors);    
+            ```
+        - `selectors`
+
+            包含一个或多个要匹配的选择器的 DOM 字符串`DOMString`。该字符串必须是有效的 `CSS` 选择器字符串；如果不是，则引发`SYNTAX_ERR`异常。请参阅使用选择器定位 DOM 元素以获取有关选择器以及如何管理它们的更多信息。
+        
+        - >如果选择器是一个 ID，并且这个 ID 在文档中错误地使用了多次，那么返回第一个匹配该 ID 的元素
+        - ```js
+            elementList = parentNode.querySelectorAll(selectors);
+            ```
+
+
+    - document.querySelectorAll()
+        - >返回与指定的选择器组匹配的文档中的元素列表 (使用深度优先的先序遍历文档的节点)。返回的对象是 `NodeList` 。
+        - 
+    - document.createElement()
+    - Element.innerHTML
+    - Element.setAttribute()
+    - Element.getAttribute()
+    - EventTarget.addEventListener()
+    - HTMLElement.style
+    - Node.appendChild()
+    - window.onload
+    - window.scrollTo()
