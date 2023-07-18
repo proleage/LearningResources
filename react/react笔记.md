@@ -295,6 +295,7 @@ const VDOM =<h1><span>Hello,React</span></h1>
 >>性别 没有指定默认为男 ，str
 >>年龄必须指定， num
 
+- 未进行输入控制的代码
 ```html
 <body>
     <div id='test'></div>
@@ -322,3 +323,56 @@ const VDOM =<h1><span>Hello,React</span></h1>
 ```
 >注意输出结果，对于num类型的引入,采用{number}
 ![](/upload/num.png)
+
+- 进行输入控制之后的代码
+
+```html
+<body>
+    <div id='test'></div>
+    <div id='test2'></div>
+    <script type="text/javascript" src="../js/react.development.js">
+    </script>
+    <script type="text/javascript" src="../js/react-dom.development.js">
+    </script>
+    <script type="text/javascript" src="../js/babel.min.js">
+    </script>
+    <script type="text/javascript" src="../js/prop-types.js">
+    </script>
+    <script type="text/babel">
+        class Person extends React.Component{ 
+            render(){ 
+                return (
+                    <ul>
+                        <li>姓名: {this.props.name}</li>
+                        <li>性别: {this.props.age+1}</li>
+                        <li>年龄: {this.props.sex}</li>
+                    </ul>
+                ) 
+            } 
+        } 
+
+        //输入控制
+        Person.propTypes = { 
+            name:PropTypes.string.isRequired, 
+            age:PropTypes.number, 
+            sex:PropTypes.string, 
+        }; 
+        //设置默认值
+        Person.defaultProps={
+            sex:'不男不女',
+            ge:18
+        };ReactDOM.render(
+
+        <Person name="Tom" age={19} sex="女" />,document.getElementById('test')); ReactDOM.render(
+
+        <Person age='19' />,document.getElementById('test2'));
+    </script>
+</body>
+```
+>注意，进行输入控制必须引入这个包
+`<script type="text/javascript" src="../js/prop-types.js">`
+
+>输出如图
+![](../limitNum.png)
+>不符合要求的提示报错如下
+![](../tips.png)
