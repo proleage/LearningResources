@@ -361,10 +361,10 @@ const VDOM =<h1><span>Hello,React</span></h1>
         Person.defaultProps={
             sex:'不男不女',
             ge:18
-        };ReactDOM.render(
-
-        <Person name="Tom" age={19} sex="女" />,document.getElementById('test')); ReactDOM.render(
-
+        };
+        ReactDOM.render(
+        <Person name="Tom" age={19} sex="女" />,document.getElementById('test')); 
+        ReactDOM.render(
         <Person age='19' />,document.getElementById('test2'));
     </script>
 </body>
@@ -376,3 +376,50 @@ const VDOM =<h1><span>Hello,React</span></h1>
 ![](../limitNum.png)
 >不符合要求的提示报错如下
 ![](../tips.png)
+
+- 可简写如下
+
+```html
+<body>
+    <div id='test'></div>
+    <div id='test2'></div>
+    <script type="text/javascript" src="../js/react.development.js">
+    </script>
+    <script type="text/javascript" src="../js/react-dom.development.js">
+    </script>
+    <script type="text/javascript" src="../js/babel.min.js">
+    </script>
+    <script type="text/javascript" src="../js/prop-types.js">
+    </script>
+    <script type="text/babel">
+        class Person extends React.Component{ 
+            render(){ 
+                return (
+                    <ul>
+                        <li>姓名: {this.props.name}</li>
+                        <li>性别: {this.props.age+1}</li>
+                        <li>年龄: {this.props.sex}</li>
+                    </ul>
+                ) 
+            }
+            //输入控制
+            static propTypes = { 
+                name:PropTypes.string.isRequired, 
+                age:PropTypes.number, 
+                sex:PropTypes.string, 
+            }; 
+            //设置默认值
+            static defaultProps={
+                sex:'不男不女',
+                ge:18
+            }; 
+        } 
+
+        
+        ReactDOM.render(
+        <Person name="Tom" age={19} sex="女" />,document.getElementById('test')); 
+        ReactDOM.render(
+        <Person age='19' />,document.getElementById('test2'));
+    </script>
+</body>
+```
