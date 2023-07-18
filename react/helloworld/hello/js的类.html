@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Js的类</title>
+</head>
+
+<body>
+    <script type="text/javascript">
+        class Person {
+            constructor(name, age) {
+                this.name = name;
+                this.age = age
+            }
+
+            speak() {
+                console.log("my name is " + this.name + " and I am " + this.age + "years old")
+            }
+        }
+
+        const person1 = new Person('Jame', '23')
+        console.log(person1)
+        person1.speak();
+
+        class Student extends Person {
+            constructor(name, age, grade) {
+                super(name, age);
+                this.grade = grade;
+            }
+            study() {
+                console.log('好好学习')
+            }
+        }
+        const student2 = new Student('Michael Schumache', '17')
+        const student3 = new Student('Max Vestappan', '16', 'F1')
+        console.log(student2);
+        student2.speak();
+        console.log(student3);
+        student3.speak();
+        student3.study()
+    </script>
+</body>
+
+</html>
