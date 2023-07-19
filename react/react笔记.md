@@ -628,7 +628,7 @@ const VDOM =<h1><span>Hello,React</span></h1>
         </script>
     </body>
 ```
-## 2.5 手机表单数据
+## 2.5 收集表单数据
 ### 2.5.1 效果
 >需求:定义一个包含表单的组件
 >>输入用户名密码后，点击登陆提示输入信息
@@ -639,6 +639,7 @@ const VDOM =<h1><span>Hello,React</span></h1>
 - 非受控组件
 
 ### 2.5.3 实现
+- 非受控组件（现用现取，使用Ref）
 ```html
 <body>
     <div id='test'></div>
@@ -651,11 +652,17 @@ const VDOM =<h1><span>Hello,React</span></h1>
     <script type="text/babel">
         /*创建组件*/
         class Login extends React.Component{
+            handleSubmit=(event)=>{
+                event.preventDefault();/*阻止表单提交*/
+                const {username,password} = this;
+                alert(`your username is: ${username.value}, your password is: ${password.value}`)
+            };
+
             render(){
                 return (
-                    <form action="http://localhost:3000/accounts">
-                        username:<input type="text" name="username"/>
-                        password:<input type="password" name="password"/>
+                    <form onSubmit={this.handleSubmit}>
+                        username:<input type="text" ref={c => this.username=c } name="username"/>
+                        password:<input type="password" ref={c => this.password=c } name="password"/>
                         <button>登录</button>
                     </form>
                 )
@@ -666,3 +673,116 @@ const VDOM =<h1><span>Hello,React</span></h1>
     </script>
 </body>
 ```
+
+- 受控组件(双向绑定，省略Ref)
+```html
+<body>
+    <div id='test'></div>
+    <script type="text/javascript" src="../js/react.development.js">
+    </script>
+    <script type="text/javascript" src="../js/react-dom.development.js">
+    </script>
+    <script type="text/javascript" src="../js/babel.min.js">
+    </script>
+    <script type="text/babel">
+        /*创建组件*/
+        class Login extends React.Component{
+            handleSubmit=(event)=>{
+                event.preventDefault();/*阻止表单提交*/
+                const {username,password} = this;
+                alert(`your username is: ${username.value}, your password is: ${password.value}`)
+            };
+            /* 初始化state */
+            state= {
+                username:"",
+                password:"",
+            };
+            /*保存用户名到状态中*/
+            saveUsername= (event)=>{
+                this.setState({username:event.target.value})
+            };
+            
+            /*保存密码到状态中*/
+            savePassword= (event)=>{
+                this.setState({password:event.target.value})
+            };
+
+            render(){
+                return (
+                    <form onSubmit={this.handleSubmit}>
+                        username:<input onChange={this.saveUsername} type="text" name="username"/>
+                        password:<input onChange={this.savePassword} type="password" name="password"/>
+                        <button>登录</button>
+                    </form>
+                )
+            }
+        }
+
+        ReactDOM.render(<Login/>,document.getElementById('test'));
+    </script>
+</body>
+```
+## 2.6 高阶函数与函数颗粒化
+
+
+```HTML
+<body>
+    <div id='test'></div>
+    <script type="text/javascript" src="../js/react.development.js">
+    </script>
+    <script type="text/javascript" src="../js/react-dom.development.js">
+    </script>
+    <script type="text/javascript" src="../js/babel.min.js">
+    </script>
+    <script type="text/babel">
+        /*创建组件*/
+        class Login extends React.Component{
+            handleSubmit=(event)=>{
+                event.preventDefault();/*阻止表单提交*/
+                const {username,password} = this;
+                alert(`your username is: ${username.value}, your password is: ${password.value}`)
+            };
+            /* 初始化state */
+            state= {
+                username:"",
+                password:"",
+            };
+            saveFormData=(dataType)=>{
+                console.log(dataType);
+                return (event)=>{
+                    /*注意此处[]是取元素*/
+                    this.setState({[dataType]:event.target.value});
+                }
+            };
+            render(){
+                return (
+                    <form onSubmit={this.handleSubmit}>
+                        username:<input onChange={this.saveFormData('username')} type="text" name="username"/>
+                        password:<input onChange={this.saveFormData('password')} type="password" name="password"/>
+                        <button>登录</button>
+                    </form>
+                )
+            }
+        }
+
+        ReactDOM.render(<Login/>,document.getElementById('test'));
+    </script>
+</body>
+```
+
+>注意：`<input onChange={this.saveFormData('username')} type="text" name="username"/>` 中如果 onChange={this.saveFormData **('username')**}有参数，则是对函数的结果直接返回，而不是对函数的返回，因此在`saveFormData`中如果直接传参:arrow_down:
+```js
+saveFormData=(event)=>{
+    event
+}
+```
+>此时event接收到的参数是`'username'`,而不是事件对象event了
+>但是可以通过回调函数进行接受:arrow_down:
+```js
+saveFormData=(dataType)=>{
+    return (event)=>{
+        this.setState({[dataType]:event.target.value});
+    }
+}
+```
+>此处的event仍为事件对象，且此处[]是动态取值，dataType的value是什么，就是什么，相当于
