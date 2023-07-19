@@ -295,6 +295,7 @@ const VDOM =<h1><span>Hello,React</span></h1>
 >>性别 没有指定默认为男 ，str
 >>年龄必须指定， num
 
+### 2.3.2 实现
 - 未进行输入控制的代码
 ```html
 <body>
@@ -360,7 +361,7 @@ const VDOM =<h1><span>Hello,React</span></h1>
         //设置默认值
         Person.defaultProps={
             sex:'不男不女',
-            ge:18
+            age:18
         };
         ReactDOM.render(
         <Person name="Tom" age={19} sex="女" />,document.getElementById('test')); 
@@ -411,7 +412,7 @@ const VDOM =<h1><span>Hello,React</span></h1>
             //设置默认值
             static defaultProps={
                 sex:'不男不女',
-                ge:18
+                age:18
             }; 
         } 
 
@@ -420,6 +421,248 @@ const VDOM =<h1><span>Hello,React</span></h1>
         <Person name="Tom" age={19} sex="女" />,document.getElementById('test')); 
         ReactDOM.render(
         <Person age='19' />,document.getElementById('test2'));
+    </script>
+</body>
+```
+
+### 2.3.3 函数式组件的使用+输入控制
+
+```html
+<body>
+    <div id='test'></div>
+    <script type="text/javascript" src="../js/react.development.js">
+    </script>
+    <script type="text/javascript" src="../js/react-dom.development.js">
+    </script>
+    <script type="text/javascript" src="../js/babel.min.js">
+    </script>
+    <script type="text/javascript" src="../js/prop-types.js">
+    </script>
+    <script type="text/babel">
+        function Person(props){
+            const {name,age,sex}=props;
+            return (
+                <ul>
+                    <li>姓名: {name}</li>
+                    <li>性别: {age+1}</li>
+                    <li>年龄: {sex}</li>
+                </ul>
+            )
+        }
+         //输入控制
+        Person.propTypes = { 
+            name:PropTypes.string.isRequired, 
+            age:PropTypes.number, 
+            sex:PropTypes.string, 
+        }; 
+        //设置默认值
+        Person.defaultProps={
+            sex:'不男不女',
+            age:18
+        };
+        ReactDOM.render(<Person name="Sandy" age={27} sex="Female"/>,document.getElementById('test'));
+    </script>
+</body>
+```
+
+## 2.4 组件的核心属性 refs
+
+### 2.4.1 效果
+>需求：自定义组件，功能说明如下
+> - 点击按钮，提示第一个输入框的值
+> - 当第二个输入框数去焦点，提示本输入框的值
+>
+
+### 2.4.2 理解
+ 组件内的标签可以定义`ref`属性标识自己
+### 2.4.3 实现
+
+- String 类型的ref ：过时且可能会被移除，效率差
+    ```html
+    <body>
+        <div id='test'></div>
+        <script type="text/javascript" src="../js/react.development.js">
+        </script>
+        <script type="text/javascript" src="../js/react-dom.development.js">
+        </script>
+        <script type="text/javascript" src="../js/babel.min.js">
+        </script>
+        <script type="text/babel">
+            class Demo extends React.Component{
+                render(){
+                    return (
+                        <div>
+                            <input ref="input1" type="text" placeholder="点击按钮提示数据"/>
+                            <button ref="button1" onClick={this.showData}>点我提示左侧的数据</button>
+                            <input ref="input2" type="text"placeholder="失去焦点·提示数据"/>
+                        </div>
+                    )
+                }
+                showData = ()=>{
+                    const {input1} = this.refs;
+                    alert(input1.value)
+                }
+            }
+
+            ReactDOM.render(<Demo/>,document.getElementById('test'));
+        </script>
+    </body>
+
+    ```
+- 回调函数形式的ref
+    ```html
+    <body>
+        <div id='test'></div>
+        <script type="text/javascript" src="../js/react.development.js">
+        </script>
+        <script type="text/javascript" src="../js/react-dom.development.js">
+        </script>
+        <script type="text/javascript" src="../js/babel.min.js">
+        </script>
+        <script type="text/babel">
+            class Demo extends React.Component{
+                render(){
+                    return (
+                        <div>
+                            <input ref={(currentNode)=>{this.input1 = currentNode}} type="text" placeholder="点击按钮提示数据"/>
+                            <button ref={()=>{}} onClick={this.showData}>点我提示左侧的数据</button>
+                            <input ref={ currentNode => this.input2 = currentNode } onBlur={this.showData2} type="text"placeholder="失去焦点·提示数据"/>
+                        </div>
+                    )
+                }
+                showData = ()=>{
+                    const {input1} = this;
+                    alert(input1.value)
+                };
+                showData2 = ()=>{
+                    const {input2} = this;
+                    alert(input2.value)
+                }
+            }
+
+            ReactDOM.render(<Demo/>,document.getElementById('test'));
+        </script>
+    </body>
+
+    ```
+- createRef()函数
+
+```html
+<body>
+    <div id='test'></div>
+    <script type="text/javascript" src="../js/react.development.js">
+    </script>
+    <script type="text/javascript" src="../js/react-dom.development.js">
+    </script>
+    <script type="text/javascript" src="../js/babel.min.js">
+    </script>
+    <script type="text/babel">
+        class Demo extends React.Component{ 
+            //React.createRef调用后返回一个容器，该容器存储被ref标识的节点，专用
+            myRef = React.createRef(); 
+            myRef2 = React.createRef(); 
+            showData = ()=>{ 
+                alert(this.myRef.current.value)
+                } ;
+            showData2 =()=>{
+                alert(this.myRef2.current.value)
+            };
+            render(){ return(
+                <div>
+                    <input ref={this.myRef} type="text" placeholder="点击按钮提示数据"/>
+                    <button onClick={this.showData}>点击提示数据</button>
+                    <input onBlur={this.showData2} ref={this.myRef2} type="text" placeholder="失去焦点 提示数据"/>
+                </div>
+                ) 
+            } 
+        } 
+        ReactDOM.render(<Demo/>,document.getElementById('test'));
+    </script>
+</body>
+
+```
+
+### 2.4.4 React中的数据处理
+- 通过onXyy属性指定事件处理函数（注意大小写）
+  - a. React使用的是自定义（合成）事件 ，而非原生DOM事件 `兼容性好`
+  - b. React中的事件是通过委托方式处理的(委托给组件最外层元素)  `高效` 
+
+        onClick和onBlur都给了<div>去操作（事件冒泡）
+- 减少使用ref的频率
+
+>发生事件的元素是要被操作的元素就可以省略ref
+>>如第二个 &#60;input>可以不使用ref,在调用showData2的时候默认会传入一个event参数，包含了&#60;input>内部元素
+>>而第一个&#60;input>不能省掉ref是因为需要被&#60;button>出发，传入的event不包含外部的第一个&#60;input>的元素
+
+
+```html
+    <body>
+        <div id='test'></div>
+        <script type="text/javascript" src="../js/react.development.js">
+        </script>
+        <script type="text/javascript" src="../js/react-dom.development.js">
+        </script>
+        <script type="text/javascript" src="../js/babel.min.js">
+        </script>
+        <script type="text/babel">
+            class Demo extends React.Component{ 
+                //React.createRef调用后返回一个容器，该容器存储被ref标识的节点，专用
+                myRef = React.createRef(); 
+                myRef2 = React.createRef(); 
+                showData = ()=>{ 
+                    alert(this.myRef.current.value)
+                    } ;
+                showData2 =(event)=>{
+                    alert(event.target.value)
+                };
+                render(){ return(
+                    <div>
+                        <input ref={this.myRef} type="text" placeholder="点击按钮提示数据"/>
+                        <button onClick={this.showData}>点击提示数据</button>
+                        <input onBlur={this.showData2}  type="text" placeholder="失去焦点 提示数据"/>
+                    </div>
+                    ) 
+                } 
+            } 
+            ReactDOM.render(<Demo/>,document.getElementById('test'));
+        </script>
+    </body>
+```
+## 2.5 手机表单数据
+### 2.5.1 效果
+>需求:定义一个包含表单的组件
+>>输入用户名密码后，点击登陆提示输入信息
+
+### 2.5.2 理解
+包含表单的组件分类
+- 受控组件
+- 非受控组件
+
+### 2.5.3 实现
+```html
+<body>
+    <div id='test'></div>
+    <script type="text/javascript" src="../js/react.development.js">
+    </script>
+    <script type="text/javascript" src="../js/react-dom.development.js">
+    </script>
+    <script type="text/javascript" src="../js/babel.min.js">
+    </script>
+    <script type="text/babel">
+        /*创建组件*/
+        class Login extends React.Component{
+            render(){
+                return (
+                    <form action="http://localhost:3000/accounts">
+                        username:<input type="text" name="username"/>
+                        password:<input type="password" name="password"/>
+                        <button>登录</button>
+                    </form>
+                )
+            }
+        }
+
+        ReactDOM.render(<Login/>,document.getElementById('test'));
     </script>
 </body>
 ```
