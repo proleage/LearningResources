@@ -722,9 +722,9 @@ const VDOM =<h1><span>Hello,React</span></h1>
     </script>
 </body>
 ```
-## 2.6 高阶函数与函数颗粒化
+## 2.6 高阶函数与函数柯里化
 
-
+### 2.6.1 高阶函数
 ```HTML
 <body>
     <div id='test'></div>
@@ -777,7 +777,8 @@ saveFormData=(event)=>{
 }
 ```
 >此时event接收到的参数是`'username'`,而不是事件对象event了
->但是可以通过回调函数进行接受:arrow_down:
+>但是可以通过回调函数进行接受 
+> :arrow_down:**(高阶函数)**:arrow_down:
 ```js
 saveFormData=(dataType)=>{
     return (event)=>{
@@ -786,3 +787,93 @@ saveFormData=(dataType)=>{
 }
 ```
 >此处的event仍为事件对象，且此处[]是动态取值，dataType的value是什么，就是什么，相当于
+
+由此可得高阶函数的一些定义 （符合其中一个即可）：
+- A函数，接收的参数是一个函数
+- A函数，调用的返回值仍为一个函数
+
+常见的高阶函数：
+- Promise（）
+  - new Promise(()=>{})
+- setTimeout()
+
+### 2.6.2 函数的柯里化(Currying)
+通过函数调用继续返回函数的方式，实现多次接收参数最后统一处理的函数编码形式。
+
+- 实现
+
+    ```html   
+        <body>
+            <div id='test'></div>
+            <script type="text/javascript" src="../js/react.development.js">
+            </script>
+            <script type="text/javascript" src="../js/react-dom.development.js">
+            </script>
+            <script type="text/javascript" src="../js/babel.min.js">
+            </script>
+            <script type="text/babel">
+                function sum(a,b,c){
+                    return a+b+c
+                }
+                const result = sum(1,2,3);
+                console.log(result);
+                 
+                function sumCurrying (a){
+                    return (b)=>{
+                        return (c)=>{
+                            return a+b+c;
+                        }
+                    }
+                };
+                const resultCurrying = sumCurrying(1)(2)(3);
+                console.log(resultCurrying);
+                /*ReactDOM.render(VDOM,document.getElementById('test'));*/
+            </script>
+        </body>
+    ```
+
+### 2.6.3 不使用柯里化
+不使用柯里化函数，完成高阶函数 `saveFormData`的功能
+
+```html
+<body>
+    <div id='test'></div>
+    <script type="text/javascript" src="../js/react.development.js">
+    </script>
+    <script type="text/javascript" src="../js/react-dom.development.js">
+    </script>
+    <script type="text/javascript" src="../js/babel.min.js">
+    </script>
+    <script type="text/babel">
+        /*创建组件*/
+        class Login extends React.Component{
+            handleSubmit=(event)=>{
+                event.preventDefault();/*阻止表单提交*/
+                const {username,password} = this;
+                alert(`your username is: ${username.value}, your password is: ${password.value}`)
+            };
+            /* 初始化state */
+            state= {
+                username:"",
+                password:"",
+            };
+            saveFormData=(dataType,value)=>{
+                this.setState({[dataType]:value})
+            };
+            render(){
+                return (
+                    <form onSubmit={this.handleSubmit}>
+                        username:<input onChange={(event)=>{this.saveFormData('username',event.target.value)}} type="text" name="username"/>
+                        password:<input onChange={(event)=>{this.saveFormData('password',event.target.value)}} type="password" name="password"/>
+                        <button>登录</button>
+                    </form>
+                )
+            }
+        }
+
+        ReactDOM.render(<Login/>,document.getElementById('test'));
+    </script>
+</body>
+```
+
+## 2.7 
