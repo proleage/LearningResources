@@ -876,4 +876,50 @@ saveFormData=(dataType)=>{
 </body>
 ```
 
-## 2.7 
+## 2.7 组件的生命周期
+
+### 2.7.1 效果
+> 需求：定义组件实现以下功能
+> - 让指定文本显示（隐藏渐变动画）
+> - 从完全可见到彻底消失，耗时2s
+> - 点击“不活了”从界面卸载组件
+
+### 2.7.2 实现
+- 引出生命周期
+    ```html
+    <body>
+        <div id='test'></div>
+            <script type="text/javascript" src="../js/react.development.js">
+            </script>
+            <script type="text/javascript" src="../js/react-dom.development.js">
+            </script>
+            <script type="text/javascript" src="../js/babel.min.js">
+            </script>
+            <script type="text/babel">
+                class LifeSpan extends React.Component{
+                    state = {opacity:1}
+                    death = ()=>{
+                        /* 卸载(移除)组件 */
+                        ReactDOM.unmountComponentAtNode(document.getElementById('test'))
+                    };
+                    render(){
+                        setInterval(()=>{
+                            let {opacity} this.state;
+                            opacity -= this.opacity;
+                            if(opacity <= 0)
+                                opacity =1
+                            this.setState({opacity})
+                        },200);
+
+                        return (
+                            <div>
+                                <h2 style={{opacity:this.state.opacity}}> React 学不会，怎么办</h2>
+                                <button onClick={this.death}>不学了</button>
+                            </div>
+                        )
+                    }
+                }
+                ReactDOM.render(<LifeSpan/>,document.getElementById('test'));
+            </script>
+    </body>
+    ```

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        Intro LifeSpan
+    </title>
+</head>
+
+<body>
+    <div id='test'></div>
+    <script type="text/javascript" src="../js/react.development.js">
+    </script>
+    <script type="text/javascript" src="../js/react-dom.development.js">
+    </script>
+    <script type="text/javascript" src="../js/babel.min.js">
+    </script>
+    <script type="text/babel">
+        class LifeSpan extends React.Component{ death = ()=>{ /* 卸载(移除)组件 */ ReactDOM.unmountComponentAtNode(document.getElementById('test')) }; render(){ return (
+        <div>
+            <h2> React 学不会，怎么办</h2>
+            <button onClick={this.death}>不学了</button>
+        </div>
+        ) } } ReactDOM.render(
+        <LifeSpan/>,document.getElementById('test'));
+    </script>
+</body>
+
+</html>
